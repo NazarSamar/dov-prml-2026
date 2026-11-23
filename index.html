@@ -165,26 +165,78 @@ footer.band .in{padding-block:40px;display:flex;flex-wrap:wrap;gap:12px 32px;jus
 td a:hover{color:var(--orange-deep)}
 @media (prefers-reduced-motion:reduce){summary::after{transition:none}}
 @media print{.tools{display:none}details{break-inside:avoid}.stats{margin-top:0}}
+
+/* group switcher (UBTS "Освітні програми" pills) */
+.groups{display:flex;flex-wrap:wrap;gap:8px}
+.gpill{font:inherit;font-size:14px;font-weight:700;padding:9px 18px;border-radius:90px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--band-fg);cursor:pointer}
+.gpill:hover{background:rgba(255,255,255,.14)}
+.gpill.on{background:var(--hl);border-color:var(--hl);color:#fff}
+.gpill:focus-visible{outline:2px solid var(--orange-on-band);outline-offset:2px}
+.gtag{font-size:12px;font-weight:700;border-radius:90px;padding:2px 10px;background:var(--peach);color:var(--ink)}
+table.cmp{min-width:720px}
+table.cmp td.num{color:var(--ink);font-weight:800}
+.pct{color:var(--muted);font-weight:600;font-size:12px;margin-left:4px}
+
+/* ===== compact «Усі групи» views — component tokens (built on the UBTS semantic tokens above) ===== */
+:root{
+  --mx-cell-max:55%;            /* strongest heat-cell tint of --orange */
+  --mx-cell-radius:10px;
+  --stack-h:22px;               /* height of a stacked group bar */
+  --stack-radius:90px;
+  --tbl-max-h:68vh;             /* scrolling table viewport in all-groups mode */
+}
+.mx-wrap{overflow-x:auto}
+table.mx{border-collapse:separate;border-spacing:6px;width:100%;min-width:560px;font-size:14px}
+table.mx th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;text-align:center;padding:4px 6px;background:none;position:static}
+table.mx th:first-child,table.mx td:first-child{text-align:left}
+table.mx td{border:0;padding:0;vertical-align:middle}
+table.mx td.lbl{font-weight:700;color:var(--ink);padding-right:8px;white-space:nowrap}
+table.mx td.c{text-align:center;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;border-radius:var(--mx-cell-radius);
+  padding:10px 6px;background:color-mix(in srgb,var(--orange) calc(var(--a,0)*var(--mx-cell-max)),var(--surface));border:1px solid var(--line)}
+table.mx td.c.z{color:var(--muted);font-weight:500}
+table.mx td.tot{text-align:center;font-weight:800;color:var(--orange-deep);font-variant-numeric:tabular-nums}
+.mx-note{font-size:13px;color:var(--muted)}
+
+.stack{display:grid;grid-template-columns:minmax(110px,170px) minmax(0,1fr);gap:10px 14px;align-items:center}
+.stack .gl{font-weight:700;color:var(--ink);font-size:14px;white-space:nowrap}
+.stack .gn{font-size:12px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums;margin-left:6px}
+.bar-st{display:flex;height:var(--stack-h);border-radius:var(--stack-radius);overflow:hidden;background:var(--na)}
+.bar-st button{border:0;padding:0;margin:0;height:100%;cursor:pointer;min-width:3px}
+.bar-st button:focus-visible,.bar-st button.on{outline:2px solid var(--ink);outline-offset:-2px}
+
+.tbl-wrap.scroll{max-height:var(--tbl-max-h);overflow:auto}
+.tcount{font-size:13px;color:var(--muted)}
+
+details.grp{background:var(--surface);border-radius:20px;border:1px solid var(--line)}
+details.grp>summary{padding:18px 20px}
+details.grp>summary .nm{font-size:18px}
+details.grp>summary .cnt{font-size:13px;color:var(--muted);font-weight:600}
+details.grp>.cards{padding:0 12px 12px}
+details.grp[open]{box-shadow:var(--shadow);border-color:transparent}
+@media (max-width:600px){.stack{grid-template-columns:minmax(0,1fr);gap:4px}.stack .bar-st{margin-bottom:8px}}
 </style>
 
 <header class="band hero">
   <div class="in">
     <p class="motto">Біблійність. Місійність. Відповідальність</p>
-    <h1>Як служать 35 студентів ПРМЛ</h1>
-    <p class="lede">Ми прочитали 35 «Документів основних відповідальностей» і відповіли на три питання: яку роль має студент, чи він включений у місцеву церкву й бере в ній участь, і чи він залучений до учнівства. Враховано лише те, що студенти самі написали у своїх ДОВ.</p>
-    <div class="meta"><span class="tag">Платформа розвитку молодих лідерів</span><span class="tag">ДОВ-1 · осінь 2026</span><span class="tag">35 документів</span></div>
+    <h1 id="h-title">Як служать студенти ПРМЛ</h1>
+    <p class="lede" id="h-lede">Ми прочитали «Документи основних відповідальностей» і відповіли на три питання: яку роль має студент, чи він включений у місцеву церкву й бере в ній участь, і чи він залучений до учнівства. Враховано лише те, що студенти самі написали у своїх ДОВ.</p>
+    <nav class="groups" id="groups" aria-label="Вибір групи"></nav>
+    <div class="meta" id="h-meta"></div>
   </div>
 </header>
 
 <main>
 <section class="sec" aria-label="Головні числа" style="padding-top:0">
   <div class="in">
-    <div class="stats">
-      <div class="stat"><b>35</b><span>студентів, по одному документу на кожного</span></div>
-      <div class="stat"><b>33</b><span>вказали конкретну роль чи служіння</span></div>
-      <div class="stat"><b>2</b><span>прямо написали, що вони члени церкви</span></div>
-      <div class="stat"><b>8</b><span>згадують наставництво чи учнівство в будь-якій формі</span></div>
-    </div>
+    <div class="stats" id="stats"></div>
+  </div>
+</section>
+
+<section class="sec" id="compare-sec" hidden>
+  <div class="in">
+    <div class="sec-head"><h2>Порівняння груп</h2><p class="lede">Ключові показники кожної групи поруч. Натисніть на назву групи, щоб відкрити лише її.</p></div>
+    <div class="tbl-wrap"><table class="cmp"><thead><tr><th>Група</th><th>Студентів</th><th>Служать, церкву названо</th><th>Служать загалом</th><th>Явні члени церкви</th><th>Навчають інших</th><th>Мають / шукають наставника</th></tr></thead><tbody id="cmp"></tbody></table></div>
   </div>
 </section>
 
@@ -219,19 +271,10 @@ td a:hover{color:var(--orange-deep)}
 <section class="sec">
   <div class="in">
     <div class="sec-head"><h2>Що з цього випливає</h2></div>
-    <div class="takes">
-      <div class="take hl"><span class="n">01</span><h3>ДОВ — це здебільшого плани</h3><p>Більша частина кожного документа — короткострокові цілі в майбутньому часі («проведу», «молитимусь»). Тому ДОВ добре показує ролі й наміри, але погано підтверджує, що відбувається насправді.</p></div>
-      <div class="take"><span class="n">02</span><h3>Про членство в церкві майже не пишуть</h3><p>Лише 2 студенти прямо назвали себе членами церкви, і ще 1 планує вступ. У шаблоні ДОВ немає поля «церква», тож відсутність згадки не означає, що студент не член.</p></div>
-      <div class="take"><span class="n">03</span><h3>Служать майже всі</h3><p>29 із 35 описують конкретне служіння. У 21 з них воно прямо пов'язане з церквою (богослужіння, недільна школа). У 8 церкву не названо. Найчастіший напрям — діти й підлітки.</p></div>
-      <div class="take"><span class="n">04</span><h3>Учнівство — найслабше місце</h3><p>Лише 2 студенти описують наставництво інших як те, що вже роблять. Ще 2 планують знайти наставника для себе. Ніхто прямо не написав, що його зараз хтось навчає.</p></div>
-    </div>
-    <div class="checks">
+    <div class="takes" id="takes"></div>
+    <div class="checks" id="checks-box">
       <h3>Що варто уточнити зі студентами</h3>
-      <ul>
-        <li>Одна студентка прямо пише, що зараз не служить. Ще 4 мають лише плани або порожні поля.</li>
-        <li>У 3 документах роль суперечить цілям (напр. «лідер малої групи», але група ще не почалась).</li>
-        <li>У 3 студентів згадано наставництво, але не вказано, хто кого наставляє.</li>
-      </ul>
+      <ul id="checks"></ul>
     </div>
   </div>
 </section>
@@ -264,7 +307,7 @@ td a:hover{color:var(--orange-deep)}
     </div>
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>#</th><th>Студент</th><th>Основний напрям</th><th>Включення в церкву</th><th>Участь у церкві</th><th>Його навчають</th><th>Навчає інших</th></tr></thead>
+        <thead id="th"></thead>
         <tbody id="tb"></tbody>
       </table>
       <p class="empty" id="empty" hidden>Нікого не знайдено. Змініть пошук або напрям.</p>
@@ -282,10 +325,7 @@ td a:hover{color:var(--orange-deep)}
 <section class="sec" style="padding-bottom:64px">
   <div class="in">
     <div class="sec-head"><h2>Про якість даних</h2></div>
-    <div class="method">
-      <div class="panel"><p>Опрацьовано всі 35 файлів. Студентів, чию особу неможливо встановити, немає. Файли з «копія» в назві належать різним людям.</p></div>
-      <div class="panel"><p>Назва файлу не завжди відповідає змісту. <code>Яроцький ДОВ.docx</code> належить Прокопчуку Мирославу. Чотири файли з «Шаблон» у назві заповнені реальними даними студентів: Гаврилюк, Мусієнко, Наконечний, Хвалібота.</p></div>
-    </div>
+    <div class="method" id="notes"></div>
   </div>
 </section>
 </main>
@@ -293,10 +333,11 @@ td a:hover{color:var(--orange-deep)}
 <footer class="band">
   <div class="in">
     <p class="motto">Українська Баптистська Теологічна Семінарія</p>
-    <p>Аналіз ДОВ-1 студентів ПРМЛ · дані лише з документів студентів</p>
+    <p>Аналіз ДОВ студентів УБТС · дані лише з документів студентів</p>
   </div>
 </footer>
 
+<script src="data/groups.js"></script>
 <script>
 const AREAS={
   kids:"Діти й підлітки",
@@ -319,199 +360,60 @@ const Q=[
    labels:{fact:"так, уже",plan:"планує / бачення",unclear:"неясно, хто кого",na:"не виявлено"}}
 ];
 const ORDER=["fact","partial","plan","unclear","no","na"];
-
-/* [name, file, area, inc, part, da, db, roles, incTxt, partTxt, daTxt, dbTxt, warn] */
-const S=[
-["Білокінь Оксана Сергіївна","ДОВ1_Білокінь.docx","worship","partial","fact","na","na",
- "Лідер музичного служіння. Поле «Роль»: «Лідер музичного служіння, нової церкви. м. Новоукраїнка».",
- "Членство не вказано. У «Баченні»: «музичне служіння нашої церкви».",
- "«Організація музичного служіння на богослужіннях» (Загальна відповідальність, п.1). План: обговорити з пастором бачення служіння до 23.10.2026.",
- "Не виявлено.","Не виявлено.",""],
-["Висоцька Юліанна Денисівна","Дов1 копія.pdf","media","na","na","na","na",
- "«організатор та ведуча подкасту» (Роль, с.1).",
- "Не виявлено.","Зв'язок подкасту з місцевою церквою не вказано.",
- "Не виявлено.","Не виявлено. План «прокачати скіли» тех-команди — це навчання навичок, а не учнівство.",""],
-["Вострійко Яна Валентинівна","дов (копія).docx","adapt","fact","fact","na","na",
- "«член церкви» (Роль); у організаційній команді групи: «добавили мене в організаційну команду» (Ціль 1, п.2). «Загальна відповідальність»: «1. -».",
- "«член церкви» (Роль). Але Ціль 1 — «Освоєне в новій церкві», тож неясно, якої церкви стосується членство.",
- "Обмежено: член організаційної команди групи (Ціль 1, п.2).",
- "Не виявлено. План спільно читати книгу з Софією учнівством не названо.","Не виявлено.",
- "Неоднозначність: «член церкви» поруч із «Освоєне в новій церкві»."],
-["Гаврилюк Ельвіра Миколаївна","Шаблон ДОВ-1.pdf","kids","na","partial","na","fact",
- "«лідер підліткового служіння» (Роль, с.1). «Я є лідером підліткового клубу та відповідаю за роботу команди, яка складається з 3 людей» (Моя роль та опис команди, с.3).",
- "Не виявлено.","Служить у підлітковому клубі, але місцеву церкву не названо.",
- "Не виявлено.","«особисте наставництво, підтримка та допомога у їхньому духовному й особистісному розвитку» (Загальна відповідальність, п.2, с.1). Плани: «приділятиму особисту увагу 2–3 підліткам» (с.2).",
- "Попри назву «Шаблон», файл заповнений даними студентки."],
-["Гімчинський Анатолій Олександрович","ДОВ 1 (2026).docx","outside","na","fact","na","na",
- "«військовослужбовець, лідер-натхненник» (Роль); «Універсальний солдат, оператор НРК, т.в.о Командира взвода» (Загальна відповідальність, п.1).",
- "Не виявлено.","Дистанційно: «в зв'язку з фізичною відсутністю в команді, допомога з ідеями щодо діяльності команди церкви» (п.2). План: «почати переосмислення літургії в церкві».",
- "Не виявлено.","Не виявлено. План «формування лідерів в команді» учнівством не названо.",""],
-["Голуб Роман Степанович","ДОВ Голуб Роман С..docx","kids","na","partial","unclear","plan",
- "Поле «Роль»: «майбутній лідер домашки» (це план). Загальна відповідальність: «Jeverse - підліткове служіння», «Наставницькі зустрічі», «Розвиток у домашніх групках».",
- "Не виявлено.","Служить у Jeverse, але церкву не вказано.",
- "«Наставницькі зустрічі» — напрям не вказано.","План: «Наставництво з Юрою… Мати з ним зустрічі читати біблію (учнівство)» (Ціль 2).",""],
-["Горенко Едуард Володимирович","ДОВ 1 копія.docx","youth","na","partial","na","na",
- "«учасник команди» (яка — не вказано). Обов'язки: «Спілкування з молоддю», «Присутність на плануваннях», «Проведення подій».",
- "Не виявлено.","Служить молоді, але церкву не вказано.",
- "Не виявлено. План «Бути підзвітним одній людині» — підзвітність, учнівством не названо.","Не виявлено.",""],
-["Горянська Марія","дов1 копія.docx","adapt","na","na","na","na",
- "Поле «Роль» порожнє. Відповідальність — прочитати три християнські книги й написати анотації.",
- "Не виявлено.","Бачення: «життя коли мало звязку з церкваою» — фраза неоднозначна, висновку не робимо.",
- "Не виявлено.","Не виявлено.",""],
-["Данда Андрій Сергійович","ДОВ Данда.docx","kids","na","fact","na","na",
- "«лідер підліткової команди PULSE, служитель в церкві» (Роль); «Викладач недільної школи для старшої групи» (Загальна відповідальність, п.2).",
- "Не виявлено.","«служитель в церкві» (Роль).",
- "Не виявлено.","Не виявлено.",""],
-["Дмитерчук Мирослава Олександрівна","ПРМЛ25б_ДОВ_Nº1_ДМИТЕРЧУК_МИРОСЛАВА_.docx","girls","na","partial","na","plan",
- "«лідер дівич групи» (Роль).",
- "Не виявлено.","Служить, але зв'язок із церквою видно лише з плану: «Підготувати приміщення церкви до групи» (Ціль 2).",
- "Не виявлено.","Бачення: дівчата «самі практикують наставництво… «учнів що роблять учнів що роблять учнів»». Це бажаний результат, а не поточна практика.",""],
-["Доля Марія Сергіївна","ДОВ 1 копія 2.docx","kids","na","partial","na","na",
- "«Член молодіжної команди» (Роль); «Організація та проведення зустріче для підлітків».",
- "Не виявлено.","Служить, церкву не названо. Опосередковано: «досвіду підліткового служіння в інших церквах і передача цього досвіду нашій команді».",
- "Не виявлено. Розмова з Ельвірою про досвід — обмін досвідом, не учнівство.","Не виявлено.",""],
-["Зборовець Даниїл Геннадійович","ДОВ-zborovets (22.10).pdf","media","na","fact","na","na",
- "«Частина молодіжної та медіа команди, лідер малої групи, звукооператор» (Роль, с.1).",
- "Не виявлено.","«Організація якісного звуку для церкви та для медіа-трансляції» (Загальна відповідальність, п.1).",
- "Не виявлено.","Не виявлено. Мала група учнівством не названа.",
- "Неузгодженість: роль «лідер малої групи», але ціль — «проконсультуватися стосовно старту проведення домашніх груп (до 26.11)»."],
-["Кантоніст Інна Олександрівна","ДОВ 1.pdf","worship","fact","fact","unclear","unclear",
- "«Студент, член церкви, одна із лідерів команди проекту Bless Way, одна з лідерів медіа команди, співлідер підліткової групи прославлення» (Роль, с.1).",
- "«член церкви» (Роль, с.1). Назву церкви не вказано.","«Ефективне служіння в церкві» (Загальна відповідальність, п.2). План: «графік участі дітей в музичній програмі на богослужіннях» (с.2).",
- "План: «Проводити наставницько-учнівську зустріч один раз в місяць» (Ціль 4, с.2). Хто наставник — не вказано.","Та сама ціль: напрям не вказано.",""],
-["Ключкович Евникія Іванівна","ДОВ 2026.pages","adapt","na","plan","na","na",
- "«Нова людина в новому середовищі, дружина» (Роль). Служіння в церкві не вказано.",
- "Не виявлено. Включення ще триває: «Адаптація до нової церкви, знайомство людьми та побудова стосунків».",
- "Лише плани: «Бути активною в різних церковних заходах»; «Розглянути можливість проведення домашньої групки вдома».",
- "Не виявлено.","Не виявлено.",
- ""],
-["Костюк Іван Олександрович","ДОВ 09.10.2026.docx","kids","na","partial","na","na",
- "«Лідер пілдіткового служіння, учасник лідерської команди» (Роль); «Організатор подій», «Технічне забезпечення».",
- "Не виявлено.","Служить, церкву не вказано. Плани: «ділитись словом на молодіжках», «проводити малі групки».",
- "Не виявлено. «Підзвітність між хлопцями з молоді» — взаємна підзвітність, не учнівство.","Не виявлено.",""],
-["Лейбюк Тетяна Петрівна","Документ.docx","girls","na","fact","na","na",
- "«Організаторка дівочих зустрічей» (Роль); «Учасниця команди організації щомісячних зустрічей для дівчат церкви».",
- "Не виявлено.","«зустрічей для дівчат церкви» (Загальна відповідальність, п.1).",
- "Не виявлено.","Не виявлено.",""],
-["Лобан Анна Сергіївна","_ДОВ 1 Лобан Анни.pdf","media","na","fact","na","na",
- "«Учасник церковної медіа-команди» (Роль, с.1); «відповідаю за роботу окремої підкоманди, яка складається з 3х людей, включно зі мною» (с.2); «Ведення підліткової сторінки в інстаграм» (п.1).",
- "Не виявлено.","«Підготовка та показ слів пісень/презентацій на недільному зібранні; координація команди» (п.2, с.1); «медіа-супроводу під час церковних зібрань» (с.2).",
- "Не виявлено.","Не виявлено. Навчання з ведення Instagram — навчання навичок.",
- ""],
-["Миколаєвич Андріана Андріївна","ДОВ-2.1_Миколаєвич_ПРМЛ_25-А.docx","kids","na","fact","na","na",
- "«Вчитель недільної школи» (Роль) для підлітків.",
- "Не виявлено.","Служіння в недільній школі; назву церкви не вказано.",
- "Не виявлено.","Не виявлено. «Готувати молодих лідерів…» — підготовка лідерів, не названа учнівством.",""],
-["Мулик Анна-Марія Іванівна","ДОВ_1_Мулик_Анна_Марія.pdf","media","partial","fact","plan","fact",
- "«Лідер церковного та молодіжного медіа» (Роль, с.1).",
- "Членство не вказано. «Ми служимо українським переселенцям у Німеччині» (Бачення).",
- "«Висвітлювати молодіжне служіння та церковні події офлайн» (Загальна відповідальність, п.3).",
- "План: «раз на місяць зустрічатися з наставником для підзвітності та порад щодо лідерства» (Ціль 3, с.2).",
- "«Розвивати та духовно наповнювати медіакоманду: наставництво, спільна молитва, навчання» (Загальна відповідальність, п.4).",
- "Не плутати з Мулик Іриною: це інша особа."],
-["Мулик Ірина Іванівна","ДОВ 1.docx","youth","na","fact","na","na",
- "«член лідерської команди молодіжного служіння» (Роль); «Ведення фінансів (каси) молодіжного служіння»; «Координація групи привітання перед зібраннями».",
- "Не виявлено.","Координує групу привітання. Плани: «здати церкві звіт з рахунками»; «графік чергування привітання на вході до церкви».",
- "Не виявлено.","Не виявлено.",""],
-["Мусієнко Єлизавета Олександрівна","ДОВ Шаблон.docx (1).pdf","girls","na","fact","na","na",
- "«Служителька Бога іншим людям в церкві та особистому житті» (Роль); «Підготовка та проведення молодіжної домашки», «Організація дівочої домашки».",
- "Не виявлено.","Поле «Роль»: «в церкві».",
- "Не виявлено.","Не виявлено.",
- "Неузгодженість: обов'язок «проведення молодіжної домашки», але «я ще не знаю розклад коли буду проводити»."],
-["Наконечний Марк Сергійович","ДОВ Шаблон Марк 1.docx","media","na","fact","na","na",
- "«заступник лідера медіа-служіння» (Роль).",
- "Не виявлено.","«Робота над світловим обладнанням, трансляцією та слайдами у церкві» (Загальна відповідальність, п.2).",
- "Не виявлено.","Не виявлено. План закріпити за новими операторами «досвідченого наставника» — технічне наставництво.",""],
-["Назарова Ксенія Віталіївна","PRML 25-B_ Ксенія Назарова, ДОВ 1 (2).docx","worship","na","fact","na","na",
- "«учасник прославлення, учасник команди молодіжного служіння» (Роль); веде молодіжні Telegram та Instagram.",
- "Не виявлено.","«Прославлення молоді на молодіжних зустрічах та служіннях у церкві» (Загальна відповідальність, п.2).",
- "Не виявлено.","Не виявлено.",""],
-["Ніколайчук Владислав Вʼячеславович","ДОВ 1 копія 3.docx","worship","na","fact","na","na",
- "«Лідер прославлення» / «Лідер групи прославлення».",
- "Не виявлено.","Лідер групи прославлення. «Разом з групою прославленням ми вже створили програму» (Ціль 3). Ціль: «святкового зібрання в церкві».",
- "Не виявлено.","Не виявлено.",""],
-["Опинка Даниил","ДОВ Daniil Opinca.docx","outside","na","na","na","unclear",
- "«Директор организации Upgrade Sport, один из лидеров международного спорт движения Ready Set Go, отец, муж, сын» (Роль).",
- "Не виявлено.","Місцеву церкву не згадано.",
- "Не виявлено.","«Процесс наставничества» (Загальна відповідальність) — напрям не вказано. Бачення: «Движение умножающихся учеников Христа».",""],
-["Прокопчук Мирослав Сергійович","Яроцький ДОВ.docx","youth","na","fact","na","na",
- "«ведення молодіжної команди “Follow Youth”»; «Проведення домашніх групок щосереди».",
- "Не виявлено.","Роль: «Впливати на церковну молодь Львову». План: «зустріч з пастором та дияконом щодо молодіжного служіння».",
- "Не виявлено.","Не виявлено.",
- "Назва файлу не збігається з ПІБ."],
-["Розводовський Даниїл Антонович","Документ_Основних_Відповідальностей_1.pdf","youth","partial","fact","plan","na",
- "«лідер молодіжної команди церкви Подорож (4 людей в команді, +- 30 активних людей молоді)» (Роль).",
- "Церкву названо («Подорож»), членство не вказано.","Лідер молодіжної команди цієї церкви.",
- "План: «Почати регулярно зустрічатись з наставником» (Ціль 3).","Не виявлено. «Розпочати міні-групку з хлопцями» учнівством не названо.",""],
-["Семенюк Богдана Іванівна","ДОВ 1.Семенюк Богдана.docx","kids","na","partial","unclear","na",
- "«Лідер-вчитель служіння дітям і підліткам» (Роль); щосуботні уроки.",
- "Не виявлено.","Служить, церкву не вказано.",
- "Суперечність: «Особистий розвиток через наставництво» (Загальна відповідальність, п.3), але «Знайти наставника… до 31.10.2026» (Ціль 3).","Не виявлено.",
- "Інша особа, ніж Семенюк Єлизавета."],
-["Семенюк Єлизавета Іванівна","ДОВ1.pdf","kids","na","fact","na","na",
- "«Лідер підліткового служіння» (Роль); «Організація проведення зустрічей у недільній школі».",
- "Не виявлено.","Служіння в недільній школі. План: «Розпочати клуб для невіруючих дітей та підлітків».",
- "Не виявлено.","Не виявлено.",""],
-["Хвалібота Марʼяна Богданівна","ДОВ Шаблон_9ad5c3e5d85e3e095910c8675e82616c.docx","kids","na","fact","na","na",
- "«Вчитель недільної школи» (Роль).",
- "Не виявлено.","Недільна школа. Бачення для дітей: «активна участь у житті церкви».",
- "Не виявлено.","Не виявлено.",
- "Попри назву «Шаблон», файл заповнений."],
-["Цайтлер Софія","ДОВ 1 Цайтлер.pdf","adapt","na","no","na","na",
- "Ні: «На даний момент не перебуваю в церковному служінні через стан здоровʼя». Поле «Роль» порожнє.",
- "Не виявлено. Про членство нічого не сказано.","Прямо: зараз не служить (та сама цитата).",
- "Не виявлено.","Не виявлено.",""],
-["Черевко Роман Андрійович","ДОВ (1)Черевко Роман.pdf","kids","na","fact","na","na",
- "«Вчитель Недільної Школи» (Роль); «Проводити біблійну частину уроку»; «Організовувати та направляти вчителів старшої групи (10-12років)».",
- "Не виявлено.","Служіння в недільній школі.",
- "Не виявлено.","Не виявлено.",""],
-["Черпак Олександр Сергійович","ДОВ1.docx","media","na","fact","na","na",
- "«медіа, поповідь, адміністрування» (Роль); «Складати програму на недільне служіння»; «Підготувати проповідь 1.15 місяця».",
- "Не виявлено.","«можу ділитися в Церкві якимось словом» (Бачення). Сам пише: «я не як майже не спілкуюся» після проповіді.",
- "Не виявлено.","Не виявлено.",""],
-["Щелконогова Христина Іванівна","ДОВ 4.pdf","adapt","plan","na","na","na",
- "«служитель» (Роль). Що за служіння, не конкретизовано.",
- "План: «Розмова з пастором щодо прийняття в члени до 15.11.26». З цього випливає, що членство ще не оформлене.",
- "Поточна участь не описана. Лише плани поговорити з лідерами прославлення й молодіжного служіння.",
- "Не виявлено.","Не виявлено.",""],
-["Яцько Оксана Миколаївна","ДОВ1_Яцько Оксани.pdf","kids","na","partial","na","na",
- "«Служіння підліткам» (Роль); «Допомога в плануванні та організації клубу New Life для підлітків».",
- "Не виявлено.","Служить, церкву не вказано.",
- "Не виявлено.","Не виявлено.",
- "Дати не узгоджуються: ціль «до 1 листопада», кроки — до 8–15 листопада."]
-];
-
-const rows=S.map((s,i)=>({n:i+1,name:s[0],file:s[1],area:s[2],inc:s[3],part:s[4],da:s[5],db:s[6],roles:s[7],tx:{inc:s[8],part:s[9],da:s[10],db:s[11]},warn:s[12]}));
+const GROUPS=window.DOV_GROUPS||[];
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const short=n=>n.split(" ").slice(0,2).join(" ");
+const chip=(lv,label)=>`<span class="chip c-${lv}">${esc(label||LV[lv])}</span>`;
+const $=id=>document.getElementById(id);
+const isAll=()=>CUR==="all"&&GROUPS.length>1;
 
-/* areas chart */
-(function(){
-  const box=document.getElementById("areas");
-  const max=Math.max(...Object.keys(AREAS).map(a=>rows.filter(r=>r.area===a).length));
-  Object.entries(AREAS).forEach(([k,label])=>{
-    const list=rows.filter(r=>r.area===k);
-    const el=document.createElement("div");el.className="area";
-    el.innerHTML=`<div class="lbl">${label}</div><div class="bar"><div style="width:${(list.length/max)*85}%"></div><em>${list.length}</em></div><div class="names">${list.map(r=>esc(short(r.name))).join(", ")}</div>`;
-    box.appendChild(el);
-  });
-})();
+/* Ukrainian plural: plural(5,["студент","студенти","студентів"]) */
+function plural(n,f){const a=Math.abs(n)%100,b=a%10;if(a>10&&a<20)return f[2];if(b>1&&b<5)return f[1];if(b===1)return f[0];return f[2]}
+const stud=n=>`${n} ${plural(n,["студент","студенти","студентів"])}`;
 
-/* waffles */
-(function(){
-  const box=document.getElementById("waffles");
-  Q.forEach(q=>{
-    const sorted=[...rows].sort((a,b)=>ORDER.indexOf(a[q.k])-ORDER.indexOf(b[q.k]));
-    const counts={};rows.forEach(r=>counts[r[q.k]]=(counts[r[q.k]]||0)+1);
-    const el=document.createElement("div");el.className="wf";
-    el.innerHTML=`<div class="wf-head"><h3>${q.title}</h3><p>${q.sub}</p></div>
-      <div class="cells" role="group" aria-label="${q.title}: ${ORDER.filter(l=>counts[l]).map(l=>counts[l]+' — '+q.labels[l]).join('; ')}">
-      ${sorted.map(r=>`<button type="button" data-name="${esc(r.name)}" data-label="${esc(q.labels[r[q.k]])}" title="${esc(r.name)} — ${esc(q.labels[r[q.k]])}" aria-label="${esc(r.name)} — ${esc(q.labels[r[q.k]])}" style="background:var(--${r[q.k]})"></button>`).join("")}</div>
-      <p class="wf-pick" aria-live="polite"><span>Торкніться крапки, щоб побачити ім'я</span></p>
-      <div class="wf-key">${ORDER.filter(l=>counts[l]).map(l=>`<span><i style="background:var(--${l})"></i><b>${counts[l]}</b> ${q.labels[l]}</span>`).join("")}</div>`;
-    box.appendChild(el);
+/* ---------- data loading: data/<id>.js for every group ---------- */
+function loadGroup(g){
+  return new Promise(res=>{
+    const s=document.createElement("script");
+    s.src=`data/${g.id}.js`;
+    s.onload=()=>res(); s.onerror=()=>{console.error("Не вдалося завантажити дані групи",g.id);res()};
+    document.head.appendChild(s);
   });
+}
+let ALL=[];
+Promise.all(GROUPS.map(loadGroup)).then(()=>{
+  const D=window.DOV_DATA||{};
+  GROUPS.forEach(g=>(D[g.id]||[]).forEach((s,i)=>ALL.push({
+    g:g.id,gname:g.name,n:i+1,id:`${g.id}-${i+1}`,
+    name:s[0],file:s[1],area:s[2],inc:s[3],part:s[4],da:s[5],db:s[6],
+    roles:s[7],tx:{inc:s[8],part:s[9],da:s[10],db:s[11]},warn:s[12]
+  })));
+  initStatic();
+  const p=new URLSearchParams(location.search).get("group");
+  select(GROUPS.some(g=>g.id===p)?p:(GROUPS.length===1?GROUPS[0].id:"all"),false);
+});
+
+/* ---------- state ---------- */
+let CUR="all", rows=[];
+function select(gid,push=true){
+  CUR=gid;
+  rows=gid==="all"?ALL:ALL.filter(r=>r.g===gid);
+  if(push){
+    const u=new URL(location.href);
+    if(gid==="all")u.searchParams.delete("group");else u.searchParams.set("group",gid);
+    try{history.replaceState(null,"",u)}catch(e){}
+  }
+  renderAll();
+}
+
+function initStatic(){
+  Object.entries(AREAS).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;$("fa").appendChild(o)});
+  $("q").addEventListener("input",renderTable);
+  $("fa").addEventListener("change",renderTable);
+  $("groups").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(b)select(b.dataset.g)});
+  $("cmp").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(b){e.preventDefault();select(b.dataset.g);window.scrollTo({top:0})}});
   /* tap / click / hover a dot → show the student's name under that row */
+  const box=$("waffles");
   const show=b=>{
     const wf=b.closest(".wf");
     wf.querySelectorAll(".cells button.on").forEach(x=>x.classList.remove("on"));
@@ -520,34 +422,172 @@ const short=n=>n.split(" ").slice(0,2).join(" ");
     p.textContent=b.dataset.name+" ";
     const s=document.createElement("span");s.textContent="— "+b.dataset.label;p.appendChild(s);
   };
-  box.addEventListener("click",e=>{const b=e.target.closest(".cells button");if(b)show(b)});
-  box.addEventListener("mouseover",e=>{const b=e.target.closest(".cells button");if(b)show(b)});
-  box.addEventListener("focusin",e=>{const b=e.target.closest(".cells button");if(b)show(b)});
-})();
+  ["click","mouseover","focusin"].forEach(ev=>box.addEventListener(ev,e=>{const b=e.target.closest(".cells button,.bar-st button");if(b)show(b)}));
+  document.addEventListener("click",e=>{
+    const a=e.target.closest("[data-open]");if(!a)return;
+    const d=document.getElementById("s-"+a.dataset.open);if(d){d.open=true;const g=d.parentElement.closest("details.grp");if(g)g.open=true;}
+  });
+}
 
-/* table + cards */
-const chip=(lv,label)=>`<span class="chip c-${lv}">${esc(label||LV[lv])}</span>`;
-const fa=document.getElementById("fa");
-Object.entries(AREAS).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;fa.appendChild(o)});
+/* ---------- metrics ---------- */
+function metrics(list){
+  const c=(k,v)=>list.filter(r=>r[k]===v).length;
+  const serve=list.filter(r=>r.part==="fact"||r.part==="partial").length;
+  const disc=list.filter(r=>r.da!=="na"||r.db!=="na").length;
+  const areaCount=Object.keys(AREAS).map(a=>[a,list.filter(r=>r.area===a).length]).sort((x,y)=>y[1]-x[1]);
+  return {
+    total:list.length, serve, disc,
+    incFact:c("inc","fact"), incPlan:c("inc","plan"),
+    partFact:c("part","fact"), partPartial:c("part","partial"), partNo:c("part","no"),
+    partNone:c("part","plan")+c("part","na"),
+    daFact:c("da","fact"), daPlan:c("da","plan"),
+    dbFact:c("db","fact"), dbPlan:c("db","plan"),
+    unclear:list.filter(r=>r.da==="unclear"||r.db==="unclear").length,
+    conflicts:list.filter(r=>/^Неузгодженість/.test(r.warn)||/Суперечність/.test(r.tx.da+r.tx.db+r.tx.inc+r.tx.part)).length,
+    topArea:areaCount[0]&&areaCount[0][1]?AREAS[areaCount[0][0]]:""
+  };
+}
+
+/* ---------- render ---------- */
+function renderAll(){
+  const m=metrics(rows);
+  const g=GROUPS.find(x=>x.id===CUR);
+  const gname=g?g.name:"усіх груп";
+  document.title=g?`ДОВ ${g.name}`:"ДОВ студентів УБТС";
+  $("h-title").textContent=g?`Як служать ${stud(m.total)} ${g.name}`:`Як служать ${stud(m.total)} у ${GROUPS.length} ${plural(GROUPS.length,["групі","групах","групах"])}`;
+  $("h-meta").innerHTML=[
+    `<span class="tag">Платформа розвитку молодих лідерів</span>`,
+    g?`<span class="tag">${esc(g.period||"")}</span>`:`<span class="tag">${GROUPS.length} ${plural(GROUPS.length,["група","групи","груп"])}</span>`,
+    `<span class="tag">${m.total} ${plural(m.total,["документ","документи","документів"])}</span>`
+  ].join("");
+  $("groups").innerHTML=(GROUPS.length>1?[{id:"all",name:"Усі групи"}]:[]).concat(GROUPS)
+    .map(x=>`<button type="button" class="gpill${x.id===CUR?" on":""}" data-g="${x.id}" aria-pressed="${x.id===CUR}">${esc(x.name)}</button>`).join("");
+  $("groups").hidden=GROUPS.length<2;
+
+  $("stats").innerHTML=[
+    [m.total,"студентів, по одному документу на кожного"],
+    [m.serve,"описують конкретне служіння"],
+    [m.incFact,"прямо написали, що вони члени церкви"],
+    [m.disc,"згадують наставництво чи учнівство в будь-якій формі"]
+  ].map(([n,t])=>`<div class="stat"><b>${n}</b><span>${t}</span></div>`).join("");
+
+  renderCompare();
+  renderAreas(); renderWaffles(); renderTakes(m); renderTable(); renderCards(); renderNotes();
+}
+
+function renderCompare(){
+  const show=CUR==="all"&&GROUPS.length>1;
+  $("compare-sec").hidden=!show;
+  if(!show)return;
+  const pct=(a,b)=>b?` <span class="pct">${Math.round(a/b*100)}%</span>`:"";
+  $("cmp").innerHTML=GROUPS.map(g=>{
+    const m=metrics(ALL.filter(r=>r.g===g.id));
+    return `<tr><td><a href="?group=${g.id}" data-g="${g.id}">${esc(g.name)}</a></td><td class="num">${m.total}</td>
+      <td class="num">${m.partFact}${pct(m.partFact,m.total)}</td><td class="num">${m.serve}${pct(m.serve,m.total)}</td>
+      <td class="num">${m.incFact}${pct(m.incFact,m.total)}</td><td class="num">${m.dbFact}${pct(m.dbFact,m.total)}</td>
+      <td class="num">${m.daFact+m.daPlan}${pct(m.daFact+m.daPlan,m.total)}</td></tr>`}).join("");
+}
+
+function renderAreas(){
+  const box=$("areas");box.innerHTML="";
+  if(isAll()){
+    const keys=Object.keys(AREAS).filter(a=>rows.some(r=>r.area===a));
+    const cnt=(a,g)=>ALL.filter(r=>r.area===a&&r.g===(g.id||g)).length;
+    const max=Math.max(1,...keys.flatMap(a=>GROUPS.map(g=>cnt(a,g))));
+    box.innerHTML=`<div class="mx-wrap"><table class="mx"><thead><tr><th>Напрям</th>${GROUPS.map(g=>`<th>${esc(g.name)}</th>`).join("")}<th>Разом</th></tr></thead><tbody>${
+      keys.map(a=>`<tr><td class="lbl">${AREAS[a]}</td>${GROUPS.map(g=>{const n=cnt(a,g);return `<td class="c${n?"":" z"}" style="--a:${(n/max).toFixed(2)}" title="${esc(g.name)} · ${AREAS[a]}: ${n}">${n||"—"}</td>`}).join("")}<td class="tot">${rows.filter(r=>r.area===a).length}</td></tr>`).join("")
+    }</tbody></table></div><p class="mx-note">Що темніша клітинка, то більше студентів групи служать у цьому напрямі. Імена — у групі окремо або в таблиці нижче.</p>`;
+    return;
+  }
+  const max=Math.max(1,...Object.keys(AREAS).map(a=>rows.filter(r=>r.area===a).length));
+  Object.entries(AREAS).forEach(([k,label])=>{
+    const list=rows.filter(r=>r.area===k);
+    if(!list.length)return;
+    const el=document.createElement("div");el.className="area";
+    el.innerHTML=`<div class="lbl">${label}</div><div class="bar"><div style="width:${(list.length/max)*85}%"></div><em>${list.length}</em></div><div class="names">${list.map(r=>esc(short(r.name))).join(", ")}</div>`;
+    box.appendChild(el);
+  });
+}
+
+function renderWaffles(){
+  const box=$("waffles");box.innerHTML="";
+  if(isAll()){
+    Q.forEach(q=>{
+      const tot={};rows.forEach(r=>tot[r[q.k]]=(tot[r[q.k]]||0)+1);
+      const el=document.createElement("div");el.className="wf";
+      el.innerHTML=`<div class="wf-head"><h3>${q.title}</h3><p>${q.sub}</p></div>
+        <div class="stack">${GROUPS.map(g=>{
+          const list=ALL.filter(r=>r.g===g.id);const c={};list.forEach(r=>c[r[q.k]]=(c[r[q.k]]||0)+1);
+          return `<span class="gl">${esc(g.name)}<span class="gn">${list.length}</span></span><div class="bar-st" role="group" aria-label="${esc(g.name)}: ${ORDER.filter(l=>c[l]).map(l=>c[l]+' — '+q.labels[l]).join('; ')}">${
+            ORDER.filter(l=>c[l]).map(l=>`<button type="button" style="width:${c[l]/list.length*100}%;background:var(--${l})" data-name="${esc(g.name)}: ${c[l]} з ${list.length}" data-label="${esc(q.labels[l])}" title="${esc(g.name)}: ${c[l]} з ${list.length} — ${esc(q.labels[l])}" aria-label="${esc(g.name)}: ${c[l]} з ${list.length} — ${esc(q.labels[l])}"></button>`).join("")
+          }</div>`}).join("")}</div>
+        <p class="wf-pick" aria-live="polite"><span>Торкніться смуги, щоб побачити кількість</span></p>
+        <div class="wf-key">${ORDER.filter(l=>tot[l]).map(l=>`<span><i style="background:var(--${l})"></i><b>${tot[l]}</b> ${q.labels[l]}</span>`).join("")}</div>`;
+      box.appendChild(el);
+    });
+    return;
+  }
+  const cols=Math.max(20,Math.min(35,rows.length));
+  Q.forEach(q=>{
+    const sorted=[...rows].sort((a,b)=>ORDER.indexOf(a[q.k])-ORDER.indexOf(b[q.k]));
+    const counts={};rows.forEach(r=>counts[r[q.k]]=(counts[r[q.k]]||0)+1);
+    const el=document.createElement("div");el.className="wf";
+    el.innerHTML=`<div class="wf-head"><h3>${q.title}</h3><p>${q.sub}</p></div>
+      <div class="cells" style="grid-template-columns:repeat(${cols},minmax(0,1fr))" role="group" aria-label="${q.title}: ${ORDER.filter(l=>counts[l]).map(l=>counts[l]+' — '+q.labels[l]).join('; ')}">
+      ${sorted.map(r=>`<button type="button" data-name="${esc(r.name)}" data-label="${esc(q.labels[r[q.k]])}" title="${esc(r.name)} — ${esc(q.labels[r[q.k]])}" aria-label="${esc(r.name)} — ${esc(q.labels[r[q.k]])}" style="background:var(--${r[q.k]})"></button>`).join("")}</div>
+      <p class="wf-pick" aria-live="polite"><span>Торкніться крапки, щоб побачити ім'я</span></p>
+      <div class="wf-key">${ORDER.filter(l=>counts[l]).map(l=>`<span><i style="background:var(--${l})"></i><b>${counts[l]}</b> ${q.labels[l]}</span>`).join("")}</div>`;
+    box.appendChild(el);
+  });
+}
+
+function renderTakes(m){
+  const t=m.total;
+  const t2=m.incFact
+    ?`Лише ${m.incFact} з ${t} прямо ${plural(m.incFact,["назвав","назвали","назвали"])} себе членами церкви${m.incPlan?`, і ще ${m.incPlan} ${plural(m.incPlan,["планує","планують","планують"])} вступ`:""}. У шаблоні ДОВ немає поля «церква», тож відсутність згадки не означає, що студент не член.`
+    :`Жоден студент прямо не написав про членство в церкві${m.incPlan?`, ${m.incPlan} ${plural(m.incPlan,["планує","планують","планують"])} вступ`:""}. У шаблоні ДОВ немає поля «церква», тож відсутність згадки не означає, що студент не член.`;
+  const t3=`${m.serve} із ${t} описують конкретне служіння. У ${m.partFact} з них воно прямо пов'язане з церквою (богослужіння, недільна школа). У ${m.partPartial} церкву не названо.${m.topArea?` Найчастіший напрям — ${m.topArea.toLowerCase()}.`:""}`;
+  const t4=`${m.dbFact?`Лише ${m.dbFact} ${plural(m.dbFact,["студент описує","студенти описують","студентів описують"])} наставництво інших як те, що вже ${plural(m.dbFact,["робить","роблять","роблять"])}.`:"Жоден студент не описує наставництво інших як те, що вже робить."} ${m.daPlan?`Ще ${m.daPlan} ${plural(m.daPlan,["планує","планують","планують"])} знайти наставника для себе.`:""} ${m.daFact?`${m.daFact} ${plural(m.daFact,["пише","пишуть","пишуть"])}, що ${plural(m.daFact,["його","їх","їх"])} зараз хтось навчає.`:"Ніхто прямо не написав, що його зараз хтось навчає."}`;
+  const items=[
+    ["ДОВ — це здебільшого плани","Більша частина кожного документа — короткострокові цілі в майбутньому часі («проведу», «молитимусь»). Тому ДОВ добре показує ролі й наміри, але погано підтверджує, що відбувається насправді.",true],
+    [m.incFact<=t/4?"Про членство в церкві майже не пишуть":"Членство в церкві","",false,t2],
+    [m.serve>=t*0.75?"Служать майже всі":"Служіння",t3],
+    [m.dbFact<=t/4?"Учнівство — найслабше місце":"Учнівство",t4]
+  ];
+  $("takes").innerHTML=items.map((x,i)=>`<div class="take${i===0?" hl":""}"><span class="n">0${i+1}</span><h3>${x[0]}</h3><p>${esc(x[3]||x[1])}</p></div>`).join("");
+
+  const ch=[];
+  if(m.partNo)ch.push(`${stud(m.partNo)} прямо ${plural(m.partNo,["пише","пишуть","пишуть"])}, що зараз не ${plural(m.partNo,["служить","служать","служать"])}.`);
+  if(m.partNone)ch.push(`${m.partNo?"Ще ":""}${stud(m.partNone)} не ${plural(m.partNone,["описує","описують","описують"])} поточного служіння: лише плани або нічого.`);
+  if(m.conflicts)ch.push(`У ${m.conflicts} ${plural(m.conflicts,["документі","документах","документах"])} роль суперечить цілям: роль описано як чинну, а в цілях її ще тільки планують.`);
+  if(m.unclear)ch.push(`У ${m.unclear} ${plural(m.unclear,["студента","студентів","студентів"])} згадано наставництво, але не вказано, хто кого наставляє.`);
+  $("checks").innerHTML=ch.map(x=>`<li>${esc(x)}</li>`).join("");
+  $("checks-box").hidden=!ch.length;
+}
+
 function renderTable(){
-  let q="";try{q=document.getElementById("q").value.trim().toLowerCase()}catch(e){}
-  const a=fa.value;
+  const all=isAll();
+  $("th").innerHTML=`<tr><th>#</th><th>Студент</th>${all?"<th>Група</th>":""}<th>Основний напрям</th><th>Включення в церкву</th><th>Участь у церкві</th><th>Його навчають</th><th>Навчає інших</th></tr>`;
+  let q="";try{q=$("q").value.trim().toLowerCase()}catch(e){}
+  const a=$("fa").value;
   const list=rows.filter(r=>(!a||r.area===a)&&(!q||r.name.toLowerCase().includes(q)||r.file.toLowerCase().includes(q)));
-  document.getElementById("tb").innerHTML=list.map(r=>`<tr>
+  $("tb").innerHTML=list.map(r=>`<tr>
     <td class="num">${r.n}</td>
-    <td><a href="#s${r.n}" data-open="${r.n}">${esc(r.name)}</a></td>
+    <td><a href="#s-${r.id}" data-open="${r.id}">${esc(r.name)}</a></td>
+    ${all?`<td>${esc(r.gname)}</td>`:""}
     <td>${AREAS[r.area]}</td>
     <td>${chip(r.inc,Q[0].labels[r.inc])}</td>
     <td>${chip(r.part,Q[1].labels[r.part])}</td>
     <td>${chip(r.da,Q[2].labels[r.da])}</td>
     <td>${chip(r.db,Q[3].labels[r.db])}</td></tr>`).join("");
-  document.getElementById("empty").hidden=list.length>0;
+  $("empty").hidden=list.length>0;
+  const wrap=$("tb").closest(".tbl-wrap");wrap.classList.toggle("scroll",list.length>20);
+  let c=$("tcount");if(!c){c=document.createElement("p");c.id="tcount";c.className="tcount";wrap.before(c)}
+  c.textContent=`Показано ${list.length} з ${rows.length}`+(list.length>20?" · таблиця прокручується всередині":"");
 }
-document.getElementById("q").addEventListener("input",renderTable);
-fa.addEventListener("change",renderTable);
-renderTable();
 
-document.getElementById("cards").innerHTML=rows.map(r=>`<details id="s${r.n}">
+function cardHTML(r){
+  return `<details id="s-${r.id}">
   <summary><span class="nm">${r.n}. ${esc(r.name)}</span><span class="fl">${esc(r.file)}</span>
     <span class="sum-chips">${chip(r.inc,"Вкл.: "+LV[r.inc])}${chip(r.part,"Участь: "+LV[r.part])}${chip(r.da,"3а: "+LV[r.da])}${chip(r.db,"3б: "+LV[r.db])}</span></summary>
   <dl class="ev">
@@ -557,10 +597,22 @@ document.getElementById("cards").innerHTML=rows.map(r=>`<details id="s${r.n}">
     <dt>Його навчають</dt><dd>${chip(r.da,Q[2].labels[r.da])}${esc(r.tx.da)}</dd>
     <dt>Навчає інших</dt><dd>${chip(r.db,Q[3].labels[r.db])}${esc(r.tx.db)}</dd>
     ${r.warn?`<p class="warn">⚠ ${esc(r.warn)}</p>`:""}
-  </dl></details>`).join("");
+  </dl></details>`;
+}
 
-document.addEventListener("click",e=>{
-  const a=e.target.closest("[data-open]");if(!a)return;
-  const d=document.getElementById("s"+a.dataset.open);if(d)d.open=true;
-});
+function renderCards(){
+  if(isAll()){
+    $("cards").innerHTML=GROUPS.map(g=>{const list=ALL.filter(r=>r.g===g.id);
+      return `<details class="grp"><summary><span class="nm">${esc(g.name)}</span><span class="cnt">${stud(list.length)}</span></summary><div class="cards">${list.map(cardHTML).join("")}</div></details>`}).join("");
+    return;
+  }
+  $("cards").innerHTML=rows.map(cardHTML).join("");
+}
+
+function renderNotes(){
+  const list=CUR==="all"?GROUPS:GROUPS.filter(g=>g.id===CUR);
+  const multi=list.length>1;
+  /* notes are written by us in data/groups.js and may contain <code> */
+  $("notes").innerHTML=list.flatMap(g=>(g.notes||[]).map(n=>`<div class="panel"><p>${multi?`<strong>${esc(g.name)}.</strong> `:""}${n}</p></div>`)).join("");
+}
 </script>
