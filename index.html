@@ -263,7 +263,7 @@ details.grp[open]{box-shadow:var(--shadow);border-color:transparent}
 
 <section class="sec">
   <div class="in">
-    <div class="sec-head"><h2>Три питання: що показують документи</h2><p class="lede">Одна крапка — один студент. Торкніться крапки або наведіть на неї, щоб побачити ім'я.</p></div>
+    <div class="sec-head"><h2>Три питання: що показують документи</h2><p class="lede" id="wf-lede">Одна крапка — один студент. Торкніться крапки або наведіть на неї, щоб побачити ім'я.</p></div>
     <div class="panel waffles" id="waffles"></div>
   </div>
 </section>
@@ -511,6 +511,7 @@ function renderAreas(){
 
 function renderWaffles(){
   const box=$("waffles");box.innerHTML="";
+  $("wf-lede").textContent=isAll()?"Одна смуга — одна група: частки студентів за рівнем доказів. Торкніться сегмента, щоб побачити кількість.":"Одна крапка — один студент. Торкніться крапки або наведіть на неї, щоб побачити ім'я.";
   if(isAll()){
     Q.forEach(q=>{
       const tot={};rows.forEach(r=>tot[r[q.k]]=(tot[r[q.k]]||0)+1);
