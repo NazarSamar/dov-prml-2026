@@ -21,28 +21,16 @@
   --hl:#a34c0e;         /* highlight card: white text, both themes */
   --peach:#faefe9;      /* UBTS pill background */
   --sand:#f4eae3;
-  --bg:#f8f8f8; --surface:#ffffff; --line:#e7e9ee;
+  --bg:#ffffff; --surface:#ffffff; --line:#e7e9ee;
   --band:#23272f; --band-fg:#ffffff; --band-muted:#b7bfce;
   --shadow:0 4px 50px rgba(27,62,73,.10);
   /* evidence levels, built from the UBTS palette */
   --fact:#a34c0e; --partial:#f2c4a3; --plan:#4c5a71; --unclear:#a7b1c4; --no:#23272f; --na:#eceef2;
   --on-fact:#ffffff; --on-partial:#23272f; --on-plan:#ffffff; --on-unclear:#23272f; --on-no:#ffffff; --on-na:#4c5a71;
   --f-sans:"Manrope","Gilroy",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* single light look, like ubts.edu.ua: white page even when the phone is in dark mode */
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --ink:#f1f2f5; --text:#c3cad7; --muted:#97a1b4; --orange:#e3793a; --orange-deep:#f09a62;
-  --peach:#3a2a20; --sand:#2e2620; --bg:#16191f; --surface:#1f232b; --line:#323844;
-  --band:#0f1115; --band-fg:#ffffff; --band-muted:#a9b2c3; --shadow:0 4px 40px rgba(0,0,0,.35);
-  --fact:#e3793a; --partial:#7a4a2c; --plan:#8f9cb3; --unclear:#566074; --no:#f1f2f5; --na:#2b303a;
-  --on-fact:#16191f; --on-partial:#f8e6da; --on-plan:#16191f; --on-unclear:#f1f2f5; --on-no:#16191f; --on-na:#c3cad7;
-  color-scheme:dark}}
-:root[data-theme="dark"]{
-  --ink:#f1f2f5; --text:#c3cad7; --muted:#97a1b4; --orange:#e3793a; --orange-deep:#f09a62;
-  --peach:#3a2a20; --sand:#2e2620; --bg:#16191f; --surface:#1f232b; --line:#323844;
-  --band:#0f1115; --band-fg:#ffffff; --band-muted:#a9b2c3; --shadow:0 4px 40px rgba(0,0,0,.35);
-  --fact:#e3793a; --partial:#7a4a2c; --plan:#8f9cb3; --unclear:#566074; --no:#f1f2f5; --na:#2b303a;
-  --on-fact:#16191f; --on-partial:#f8e6da; --on-plan:#16191f; --on-unclear:#f1f2f5; --on-no:#16191f; --on-na:#c3cad7;
-  color-scheme:dark}
 
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f-sans);font-size:16px;line-height:1.6;font-weight:500}
@@ -297,8 +285,6 @@ td a:hover{color:var(--orange-deep)}
     <div class="method">
       <div class="panel"><p>Опрацьовано всі 35 файлів. Студентів, чию особу неможливо встановити, немає. Файли з «копія» в назві належать різним людям.</p></div>
       <div class="panel"><p>Назва файлу не завжди відповідає змісту. <code>Яроцький ДОВ.docx</code> належить Прокопчуку Мирославу. Чотири файли з «Шаблон» у назві заповнені реальними даними студентів: Гаврилюк, Мусієнко, Наконечний, Хвалібота.</p></div>
-      <div class="panel"><p>Текст <code>ДОВ 2026.pages</code> (Ключкович) витягнуто з внутрішнього файлу документа, і він збігається з превʼю.</p></div>
-      <div class="panel"><p>PDF Лобан Анни має розірваний текстовий шар, тому обидві сторінки звірено візуально.</p></div>
     </div>
   </div>
 </section>
@@ -398,7 +384,7 @@ const S=[
  "Не виявлено. Включення ще триває: «Адаптація до нової церкви, знайомство людьми та побудова стосунків».",
  "Лише плани: «Бути активною в різних церковних заходах»; «Розглянути можливість проведення домашньої групки вдома».",
  "Не виявлено.","Не виявлено.",
- "Файл .pages прочитано повністю: текст збігається з превʼю, інших сторінок немає."],
+ ""],
 ["Костюк Іван Олександрович","ДОВ 09.10.2026.docx","kids","na","partial","na","na",
  "«Лідер пілдіткового служіння, учасник лідерської команди» (Роль); «Організатор подій», «Технічне забезпечення».",
  "Не виявлено.","Служить, церкву не вказано. Плани: «ділитись словом на молодіжках», «проводити малі групки».",
@@ -411,7 +397,7 @@ const S=[
  "«Учасник церковної медіа-команди» (Роль, с.1); «відповідаю за роботу окремої підкоманди, яка складається з 3х людей, включно зі мною» (с.2); «Ведення підліткової сторінки в інстаграм» (п.1).",
  "Не виявлено.","«Підготовка та показ слів пісень/презентацій на недільному зібранні; координація команди» (п.2, с.1); «медіа-супроводу під час церковних зібрань» (с.2).",
  "Не виявлено.","Не виявлено. Навчання з ведення Instagram — навчання навичок.",
- "Текстовий шар PDF розірваний, тому цитати звірено візуально з обома сторінками."],
+ ""],
 ["Миколаєвич Андріана Андріївна","ДОВ-2.1_Миколаєвич_ПРМЛ_25-А.docx","kids","na","fact","na","na",
  "«Вчитель недільної школи» (Роль) для підлітків.",
  "Не виявлено.","Служіння в недільній школі; назву церкви не вказано.",
